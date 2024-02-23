@@ -198,6 +198,10 @@ func (d *APICordonDrainer) Cordon(n *core.Node, mutators ...nodeMutatorFn) error
 		}
 
 		fresh.Spec.Unschedulable = true
+		// Remove any karpenter annotations
+		delete(fresh.Annotations, "karpenter.sh/do-not-evict")
+		delete(fresh.Annotations, "karpenter.sh/do-not-disrupt")
+		delete(fresh.Annotations, "karpenter.sh/do-not-consolidate")
 		for _, m := range mutators {
 			m(fresh)
 		}
