@@ -5,7 +5,7 @@ RUN apk update && apk add git && apk add curl
 WORKDIR /go/src/github.com/dfroberg/draino
 COPY . .
 
-RUN go build -o /draino ./cmd/draino
+RUN GOOS=linux GOARCH=amd64 go build -o /draino ./cmd/draino
 
 FROM alpine:3.19
 
