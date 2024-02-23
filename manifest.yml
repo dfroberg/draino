@@ -63,7 +63,7 @@ spec:
       containers:
       # You'll want to change these labels and conditions to suit your deployment.
       - command: [/draino, --dry-run, --node-label=draino-enabled=true, BadCondition, ReallyBadCondition]
-        image: dfroberg/draino:latest
+        image: dfroberg/draino:5d5330c
         livenessProbe:
           httpGet: {path: /healthz, port: 10002}
           initialDelaySeconds: 30
