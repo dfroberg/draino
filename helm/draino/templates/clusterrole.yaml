@@ -14,7 +14,7 @@ rules:
   verbs: [create, patch, update]
 - apiGroups: ['']
   resources: [nodes]
-  verbs: [get, watch, list, update]
+  verbs: [get, watch, list, update, patch, delete]
 - apiGroups: ['']
   resources: [nodes/status]
   verbs: [patch, update]
