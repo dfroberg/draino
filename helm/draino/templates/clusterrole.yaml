@@ -33,5 +33,7 @@ rules:
 - apiGroups: ['']
   resources: [endpoints]
   verbs: [get, create, update]
-
+- apiGroups: ['coordination.k8s.io']
+  resources: ['leases']
+  verbs: ['get', 'watch', 'list']
 {{- end -}}
