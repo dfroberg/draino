@@ -112,6 +112,7 @@ type APICordonDrainer struct {
 	maxGracePeriod   time.Duration
 	evictionHeadroom time.Duration
 	skipDrain        bool
+	skipDelete       bool
 }
 
 // SuppliedCondition defines the condition will be watched.
@@ -153,6 +154,13 @@ func WithPodFilter(f PodFilterFunc) APICordonDrainerOption {
 func WithSkipDrain(b bool) APICordonDrainerOption {
 	return func(d *APICordonDrainer) {
 		d.skipDrain = b
+	}
+}
+
+// WithDrain determines if we're actually going to drain nodes
+func WithSkipDelete(b bool) APICordonDrainerOption {
+	return func(d *APICordonDrainer) {
+		d.skipDelete = b
 	}
 }
 
@@ -334,6 +342,17 @@ func (d *APICordonDrainer) Drain(n *core.Node) error {
 			}
 		case <-deadline:
 			return errors.Wrap(errTimeout{}, "timed out waiting for evictions to complete")
+		}
+	}
+
+	// All pods have been evicted, delete the node
+	if d.skipDrain {
+		d.l.Debug("Skipping delete because draining is disabled")
+		return nil
+	} else {
+		err = d.c.CoreV1().Nodes().Delete(context.Background(), n.GetName(), meta.DeleteOptions{})
+		if err != nil {
+			return errors.Wrapf(err, "cannot delete node %s", n.GetName())
 		}
 	}
 	return nil

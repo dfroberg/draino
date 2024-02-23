@@ -68,6 +68,7 @@ func main() {
 		leaderElectionTokenName     = app.Flag("leader-election-token-name", "Leader election token name.").Default(kubernetes.Component).String()
 
 		skipDrain             = app.Flag("skip-drain", "Whether to skip draining nodes after cordoning.").Default("false").Bool()
+		skipDelete            = app.Flag("skip-delete", "Whether to skip deleteing nodes after draining.").Default("false").Bool()
 		evictDaemonSetPods    = app.Flag("evict-daemonset-pods", "Evict pods that were created by an extant DaemonSet.").Bool()
 		evictStatefulSetPods  = app.Flag("evict-statefulset-pods", "Evict pods that were created by an extant StatefulSet.").Bool()
 		evictLocalStoragePods = app.Flag("evict-emptydir-pods", "Evict pods with local storage, i.e. with emptyDir volumes.").Bool()
@@ -163,6 +164,7 @@ func main() {
 			kubernetes.MaxGracePeriod(*maxGracePeriod),
 			kubernetes.EvictionHeadroom(*evictionHeadroom),
 			kubernetes.WithSkipDrain(*skipDrain),
+			kubernetes.WithSkipDelete(*skipDelete),
 			kubernetes.WithPodFilter(kubernetes.NewPodFilters(pf...)),
 			kubernetes.WithAPICordonDrainerLogger(log),
 		),
