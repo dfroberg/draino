@@ -1,4 +1,7 @@
 # draino [![Docker Pulls](https://img.shields.io/docker/pulls/dfroberg/draino.svg)](https://hub.docker.com/r/dfroberg/draino/) [![Godoc](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/dfroberg/draino) [![Travis](https://img.shields.io/travis/com/dfroberg/draino.svg?maxAge=300)](https://travis-ci.com/dfroberg/draino/) [![Codecov](https://img.shields.io/codecov/c/github/dfroberg/draino.svg?maxAge=3600)](https://codecov.io/gh/dfroberg/draino/)
+
+This draino does custom thing, don't use this unless you understand texactly what it's doing.
+
 Draino automatically drains Kubernetes nodes based on labels and node
 conditions. Nodes that match _all_ of the supplied labels and _any_ of the
 supplied node conditions will be cordoned immediately and drained after a
@@ -47,6 +50,7 @@ Flags:
       --leader-election-retry-period=2s
                                  Leader election retry period.
       --skip-drain               Whether to skip draining nodes after cordoning.
+      --skip-delete              Whether to skip deleteing nodes after draining.
       --evict-daemonset-pods     Evict pods that were created by an extant DaemonSet.
       --evict-emptydir-pods      Evict pods with local storage, i.e. with emptyDir volumes.
       --evict-unreplicated-pods  Evict pods that were not created by a replication controller.
@@ -75,6 +79,8 @@ Keep the following in mind before deploying Draino:
 * Always run Draino in `--dry-run` mode first to ensure it would drain the nodes
   you expect it to. In dry run mode Draino will emit logs, metrics, and events
   but will not actually cordon or drain nodes.
+* Always run Draino in `--skip-delete` to not trigger the delete node after 
+  succesfull drain logic.
 * Draino immediately cordons nodes that match its configured labels and node
   conditions, but will wait a configurable amount of time (10 minutes by default)
   between draining nodes. i.e. If two nodes begin exhibiting a node condition
